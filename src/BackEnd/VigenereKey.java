@@ -120,7 +120,7 @@ public static String keyString(byte[] ct) {
 		//System.out.print(alphabet[segmentShiftValue(segments_list, i)] + "  - Shift is: "+ segmentShiftValue(segments_list, i) + "\n"); //gives key and shift in parts i.e. lines
 		reStrings.add(alphabet[segmentShiftValue(segments_list, i)]); //gives the complete key
 	}
-	return reStrings.toString();
+	return String.join("", reStrings);
 }
 
 
