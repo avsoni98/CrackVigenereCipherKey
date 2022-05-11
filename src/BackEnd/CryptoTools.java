@@ -32,7 +32,7 @@ public class CryptoTools
 		{
 			char c = (char) (in[i] & ~32);
 			if (c >= 'A' && c <= 'Z')
-				bos.write(c);
+				bos.write(Character.toUpperCase(c));
 		}
 		return bos.toByteArray();
 	}

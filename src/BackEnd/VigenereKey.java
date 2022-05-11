@@ -128,6 +128,7 @@ public static String keyString(byte[] ct) {
 
 		//Step 1 - place ciphertext in Vciphertext.txt
 			byte[] ct = CryptoTools.fileToBytes("data/Vciphertext.txt"); //ciphertext goes in here
+			byte[] ct2 = CryptoTools.clean(ct);
 			
 		//Step 2 - find the key length
 		//USE THIS TO CHECK FOR IC (CLOSEST TO 0.064 FOR ENGLISH) TO FIND KEY LENGTH ////////////
@@ -139,8 +140,7 @@ public static String keyString(byte[] ct) {
 		//replace key_length with discovered key_length value from Step 2
 			//int key_length = 9; 
 		
-			System.out.println(keyString(ct));	
-	 
+			System.out.println(keyString(ct2));	
 	}
 	
 
