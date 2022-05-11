@@ -60,15 +60,31 @@ public static double CosineSimilarity(byte[] ar) {
 }
 
 
-public static void keyLength(byte[] ct) {
+public static int keyLength(byte[] ct) {
 	//has to be an IC value that is closest to 0.064 for English
+	HashMap<Integer, Double> icValue = new HashMap<>();
 	 for (int k = 1; k < 50; k++) { //use to find IC for key length from 1 to 50
 		 byte[] sample = Sample(ct, k,0); // use to find IC
 		double ic =CryptoTools.getIC(sample, 100000);
-		System.out.printf("Key length %2d --> IC = %.3f\n", k, ic); //has to be an IC value that is closest to 0.064 for English
+		String shortDouble = String.format("%.2f", ic);
+		icValue.put(k, Math.abs(0.064 - Double.parseDouble(shortDouble))); 
+		//System.out.printf("Key length %2d --> IC = %.3f\n", k, Math.abs(0.064 - ic));
 		}
+	//Finds IC value that is closest to 0.064 for English language
+	  return minIC(icValue);
 }
 
+public static int minIC(HashMap<Integer, Double> map) {
+	int length = 0;
+	 Double min = map.get(1);
+	 for (int j = 2; j < map.size(); j++) {
+		 if (map.get(j) < min) {
+			 min = map.get(j);
+			 length = j;
+		 }
+	 }
+	return length;
+}
 
 public static int maxCSValue(ArrayList<Double> arr) {
 	double give = 0;
@@ -91,19 +107,20 @@ public static int segmentShiftValue(ArrayList<byte[]> segments_list, int i) {
 		arr_CS.add(j, CosineSimilarity(eh));
 		maxCSValue(arr_CS);
 		}	
-	
 	return maxCSValue(arr_CS);
 }
 
-public static void keyString(byte[] ct, int keylength) {
+public static String keyString(byte[] ct) {
 	String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-
+	String resultString = "";
+	ArrayList<String> reStrings = new ArrayList<>();
 	ArrayList<byte[]> segments_list = new ArrayList<byte[]>();
-	for (int i = 0; i < keylength; i++) {
-		segments_list.add(Sample(ct, keylength, i));
+	for (int i = 0; i < keyLength(ct); i++) {
+		segments_list.add(Sample(ct, keyLength(ct), i));
 		//System.out.print(alphabet[segmentShiftValue(segments_list, i)] + "  - Shift is: "+ segmentShiftValue(segments_list, i) + "\n"); //gives key and shift in parts i.e. lines
-		System.out.print(alphabet[segmentShiftValue(segments_list, i)]); //gives the complete key
+		reStrings.add(alphabet[segmentShiftValue(segments_list, i)]); //gives the complete key
 	}
+	return reStrings.toString();
 }
 
 
@@ -115,12 +132,14 @@ public static void keyString(byte[] ct, int keylength) {
 		//Step 2 - find the key length
 		//USE THIS TO CHECK FOR IC (CLOSEST TO 0.064 FOR ENGLISH) TO FIND KEY LENGTH ////////////
 		//IC value that is CLOSEST to 0.064 for English gives the KEY LENGTH
-			keyLength(ct); 
+			//keyLength(ct); 
+			//System.out.print(keyLength(ct));
 		
 		//Step 3  - Check cosine similarity for the letter from each segment, obtain the key string
 		//replace key_length with discovered key_length value from Step 2
-			int key_length = 9; 
-			keyString(ct, key_length); 
+			//int key_length = 9; 
+		
+			System.out.println(keyString(ct));	
 	
 	}
 	
